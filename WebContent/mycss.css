@@ -1,0 +1,90 @@
+@charset "utf-8";
+/* CSS Document */
+#maindiv {
+	width: 1300px;
+	height: auto;
+	margin: 0 auto;
+	background: url('back2.png') repeat-x;
+	background-color: #fb8b06;
+}
+
+#logtbl {
+	padding-left: 500px;
+	padding-top: 15px;
+}
+
+nav {
+	padding-left: 10px
+}
+
+nav ul ul {
+	display: none;
+}
+
+nav ul li:hover>ul {
+	display: block;
+}
+
+nav ul {
+	background: #cc6600;
+	background: linear-gradient(top, #efefef 0%, #cc6600 100%);
+	background: -moz-linear-gradient(top, #efefef 0%, #cc6600 100%);
+	background: -webkit-linear-gradient(top, #ffddaa 0%, #cc6600 100%);
+	box-shadow: 10px 10px 9px rgba(0, 0, 0, 0.5);
+	padding: 0 0px;
+	border-radius: 20px;
+	list-style: none;
+	position: relative;
+	display: inline-table;
+}
+
+nav ul:after {
+	content: "";
+	clear: both;
+	display: block;
+}
+
+nav ul li {
+	float: left;
+	height: 40px;
+}
+
+nav ul li:hover {
+	background: #4b545f;
+	background: linear-gradient(top, #cc6600 0%, #5f6975 40%);
+	background: -moz-linear-gradient(top, #cc6600 0%, #5f6975 40%);
+	background: -webkit-linear-gradient(top, #cc6600 0%, #5f6975 40%);
+	border-radius: 20px;
+}
+
+nav ul li:hover a {
+	color: #fff;
+}
+
+nav ul li a {
+	display: block;
+	padding: 12px 40px;
+	color: #000;
+	text-decoration: none;
+}
+
+nav ul ul {
+	background: #5f6975;
+	border-radius: 15px;
+	padding: 0;
+	position: absolute;
+	top: 100%;
+}
+
+nav ul ul li {
+	float: none;
+	width: 218px;
+	border-top: 1px solid #6b727c;
+	border-bottom: 1px solid #575f6a;
+	position: relative;
+}
+
+nav ul ul li a {
+	padding: 15px 40px;
+	color: #fff;
+}
