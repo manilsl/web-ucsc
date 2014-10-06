@@ -1,17 +1,12 @@
 package com.devicemgt.dao;
 
-
-
 import com.devicemgt.model.Student;
-
-import javax.ws.rs.core.UriInfo;
 import java.util.LinkedList;
 
 public interface StudentDao {
 
-    public String deleteStudent(String id) throws Exception;
-    public LinkedList<Student> getStudent(UriInfo parameters);
-    public String addStudent(Student student);
-    public String editStudent(Student student, String id);
-
+	public String deleteStudent(String restURL) throws Exception;
+    public LinkedList<Student> getStudentList(String jsonBody, String rootElement);
+    public String addStudent(Student student, String restURL);
+    public String updateStudent(Student student,  String restURL);
 }

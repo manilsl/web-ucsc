@@ -1,6 +1,6 @@
 <%@page import="com.devicemgt.util.*"%>
 <%@page import="java.util.LinkedList"%>
-<%@page import="com.devicemgt.model.Transaction"%>
+<%@page import="com.devicemgt.model.StudentProgram"%>
 <%@page import="java.text.DateFormat"%>
 <%@page import="java.text.SimpleDateFormat"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
@@ -98,8 +98,7 @@
 			</font></b>
 		</center>
 		<%
-			LinkedList<Transaction> transactionList = (LinkedList<Transaction>) session
-						.getAttribute("TransactionList");
+			LinkedList<StudentProgram> studentProgramList = (LinkedList<StudentProgram>) session.getAttribute("StudentProgramList");
 		%>
 
 		<div id="frame">

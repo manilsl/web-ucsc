@@ -1,15 +1,13 @@
 package com.devicemgt.dao;
 
 import com.devicemgt.model.Subject;
-
-import javax.ws.rs.core.UriInfo;
 import java.util.LinkedList;
 
 public interface SubjectDao {
 
-    public String deleteSubject(String id) throws Exception;
-    public LinkedList<Subject> getSubject(UriInfo parameters);
-    public String addSubject(Subject subject);
-    public String editSubject(Subject subject, String id);
+	public String deleteSubject(String restURL) throws Exception;
+    public LinkedList<Subject> getSubjectList(String jsonBody, String rootElement);
+    public String addSubject(Subject subject, String restURL);
+    public String updateSubject(Subject subject,  String restURL);
 
 }
