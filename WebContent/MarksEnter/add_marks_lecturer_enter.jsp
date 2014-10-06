@@ -15,7 +15,7 @@
 </head>
 <body id="page1">
 
-	<%
+	<%-- <%
 		String username = null;
 		String role = "user";
 
@@ -34,11 +34,11 @@
 		}
 
 		if (username != null) {
-	%>
+	%> --%>
 	<table height="100" width="100%" border="0" cellspacing="1"
 		bgcolor="#474747">
 		<tr>
-			<td><font color="#fff">Welcome : <%=username%></font></td>
+			<td><font color="#fff">Welcome : name</font></td>
 		</tr>
 		<tr>
 			<td width="160" />
@@ -89,8 +89,7 @@
 
 		<center style="Background-color: #ccff00;">
 			<b><font color="red"> <%
- 	String errorMessage = (String) request
- 				.getAttribute(BackendConstants.ERROR_MESSAGE);
+ 	String errorMessage = (String) request.getAttribute(BackendConstants.ERROR_MESSAGE);
  		if (errorMessage != null) {
  			out.println("*" + errorMessage);
  		}
@@ -98,24 +97,24 @@
 			</font></b>
 		</center>
 		<%
-			LinkedList<StudentProgram> studentProgramList = (LinkedList<StudentProgram>) session.getAttribute("StudentProgramList");
+			LinkedList<StudentProgram> marksList = (LinkedList<StudentProgram>) session.getAttribute("StudentProgramList");
 		%>
 
 		<div id="frame">
 			<div id="content">
 
-				<form action="TransactionController" method="get">
+				<form action="StudentProgramController" method="get">
 					<table width="900" height="80" border="1" cellspacing="1">
 						<tr height="60"></tr>
 
 
 						<%
-							if (transactionList != null) {
-									DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+							if (marksList != null) {
+									//DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
-									for (int y = 0; y < transactionList.size(); y++) {
+									for (int y = 0; y < marksList.size(); y++) {
 
-										String dueDate = "";
+										/* String dueDate = "";
 										try {
 											if (dateFormat.format(transactionList.get(y)
 													.getDueDate()) != null) {
@@ -144,57 +143,21 @@
 														.get(y).getReturnDate());
 											}
 										} catch (Exception e) {
-										}
+										} */
 						%>
 
 						<tr>
-							<td class="unandpwd">Activity ID :</td>
-							<td align="center"><input type="text" name="transactionId"
-								value="<%=transactionList.get(y).getTransactionId()%>" /></td>
+							<td class="unandpwd">Student :</td>
+							<td align="center"><input type="text" name="studentID"
+								value="<%=marksList.get(y).getStudentID()%>" /></td>
 
 						</tr>
 
 						<tr>
-							<td class="unandpwd">Device ID :</td>
-							<td align="center"><input type="text" name="deviceId"
-								value="<%=transactionList.get(y).getDeviceId()%>" /></td>
+							<td class="unandpwd">Marks :</td>
+							<td align="center"><input type="text" name="lecturerMark"
+								value="<%=marksList.get(y).getFinalMark()%>" /></td>
 
-						</tr>
-
-						<tr>
-							<td class="unandpwd">User ID :</td>
-							<td align="center"><input type="text" name="userId"
-								value="<%=transactionList.get(y).getUserId()%>" /></td>
-
-						</tr>
-
-						<tr>
-							<td class="unandpwd">Status ID :</td>
-							<td align="center"><input type="text"
-								name="transactionStatusId"
-								value="<%=transactionList.get(y)
-								.getTransactionStatusId()%>" /></td>
-
-						</tr>
-
-						<tr>
-							<td class="unandpwd">Transaction Date :</td>
-							<td align="center"><input type="text" name="transactionDate"
-								value="<%=transactionDate%>" /></td>
-
-						</tr>
-
-						<tr>
-							<td class="unandpwd">Due Date :</td>
-							<td align="center"><input type="text" name="dueDate"
-								value="<%=dueDate%>" /></td>
-
-						</tr>
-
-						<tr>
-							<td class="unandpwd">Return Date :</td>
-							<td align="center"><input type="text" name="returnDate"
-								value="<%=returnDate%>" /></td>
 						</tr>
 
 						<tr height="10" />
@@ -209,14 +172,14 @@
 					</table>
 					<input type="submit" name="updateBtn" value="Update">
 				</form>
-				<%
+				<%-- <%
 					} else {
 						String url = "/";
 				%>
 				<jsp:forward page="<%=url%>" />
 				<%
 					}
-				%>
+				%> --%>
 			</div>
 		</div>
 

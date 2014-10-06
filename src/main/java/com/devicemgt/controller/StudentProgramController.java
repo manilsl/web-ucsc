@@ -228,18 +228,16 @@ public class StudentProgramController extends HttpServlet {
 
 			} else if (actionType.equals("updateStudentProgram")) {
 
-				String strID = request.getParameter("dID");
-				System.out.println(strID);
+				String studentID = request.getParameter("studentID");
+				String lecturerMark = request.getParameter("lecturerMark");
+				System.out.println(lecturerMark);
 
 				studentProgram = new StudentProgram();
-	/*			studentProgram.setName(strName);
-				studentProgram.setDescription(strDescription);
-				studentProgram.setStatusId(Integer.parseInt(strStatus));
-				studentProgram.setTypeId(Integer.parseInt(strType));
-*/
-				System.out.println(studentProgram);
+				studentProgram.setStudentID(studentID);
+				studentProgram.setFinalMark(lecturerMark);
 
-				String restURL = BackendConstants.SERVICEURL +"/studentProgram/updatestudentProgram/"
+
+				String restURL = BackendConstants.SERVICEURL +"/studentprogram/updatestudentProgram/"
 						+ strID;
 
 				studentProgramDao = new StudentProgramDaoImpl();
