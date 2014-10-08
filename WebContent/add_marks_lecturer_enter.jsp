@@ -1,8 +1,7 @@
 <%@page import="com.devicemgt.util.*"%>
 <%@page import="java.util.LinkedList"%>
 <%@page import="com.devicemgt.model.StudentProgram"%>
-<%@page import="java.text.DateFormat"%>
-<%@page import="java.text.SimpleDateFormat"%>
+<%@page import="com.devicemgt.model.StudentProgramDetail"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
@@ -12,8 +11,41 @@
 <title>WSO2 Device Repository</title>
 <link href="css/style.css" rel="stylesheet" type="text/css" />
 
+<script>
+	function loadCourses() {
+		var xmlhttp;
+		if (window.XMLHttpRequest) {// code for IE7+, Firefox, Chrome, Opera, Safari
+			xmlhttp = new XMLHttpRequest();
+		} else {// code for IE6, IE5
+			xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+		}
+
+		xmlhttp.onreadystatechange = function() {
+			if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+				document.getElementById("maindiv").innerHTML = xmlhttp.responseText;
+			}
+		}
+		xmlhttp.open("GET", "StudentProgramController", true);
+		xmlhttp.send();
+	}
+</script>
+<script>
+function checkEdited(index) {
+
+	
+	document.getElementById("isEdit"+index).value = "1";
+
+	 
+	}
+</script>
+
 </head>
-<body id="page1">
+		<%
+				String actionType = "getStudentProgramDetail";
+					session.setAttribute("actionType", actionType);
+			%>
+
+<body id="page1"  onload="loadCourses()">
 
 	<%-- <%
 		String username = null;
@@ -96,8 +128,12 @@
  %>
 			</font></b>
 		</center>
+
 		<%
-			LinkedList<StudentProgram> marksList = (LinkedList<StudentProgram>) session.getAttribute("StudentProgramList");
+			LinkedList<StudentProgramDetail> marksList = (LinkedList<StudentProgramDetail>) session.getAttribute("StudentProgramListDet");
+		
+		
+		
 		%>
 
 		<div id="frame">
@@ -109,68 +145,68 @@
 
 
 						<%
+						
 							if (marksList != null) {
-									//DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
 									for (int y = 0; y < marksList.size(); y++) {
 
-										/* String dueDate = "";
-										try {
-											if (dateFormat.format(transactionList.get(y)
-													.getDueDate()) != null) {
-												dueDate = dateFormat.format(transactionList
-														.get(y).getDueDate());
-											}
-										} catch (Exception e) {
-										}
 
-										String transactionDate = "";
-										try {
-											if (dateFormat.format(transactionList.get(y)
-													.getTransactionDate()) != null) {
-												transactionDate = dateFormat
-														.format(transactionList.get(y)
-																.getTransactionDate());
-											}
-										} catch (Exception e) {
-										}
-
-										String returnDate = "";
-										try {
-											if (dateFormat.format(transactionList.get(y)
-													.getReturnDate()) != null) {
-												returnDate = dateFormat.format(transactionList
-														.get(y).getReturnDate());
-											}
-										} catch (Exception e) {
-										} */
 						%>
 
 						<tr>
 							<td class="unandpwd">Student :</td>
-							<td align="center"><input type="text" name="studentID"
+							<td align="center"><input type="text" name="studentID<%=y%>"
 								value="<%=marksList.get(y).getStudentID()%>" /></td>
 
+						
+						
+					
+							<td class="unandpwd">Program :</td>
+							<td align="center"><input type="text" name="programID<%=y%>"
+								value="<%=marksList.get(y).getProgramID()%>" /></td>
+
+						
+						
+							<td class="unandpwd">Subject :</td>
+							<td align="center"><input type="text" name="subjectID<%=y%>" 
+								value="<%=marksList.get(y).getSubjectID()%>" /></td>
+							
+							
+							
+
+						
+							<td class="unandpwd" >Marks :</td>
+							<td align="center" ><input type="text" name="lecturerMark<%=y%>" 
+								value="<%=marksList.get(y).getFinalMark()%>" onkeypress="checkEdited(<%=y%>);"/></td>
+					
+							<td align="center" style="display:none;">
+								<input type="text" name="isEdit<%=y%>" id="isEdit<%=y%>"value="0"  readonly/>
+							</td>	
+
+
 						</tr>
 
-						<tr>
-							<td class="unandpwd">Marks :</td>
-							<td align="center"><input type="text" name="lecturerMark"
-								value="<%=marksList.get(y).getFinalMark()%>" /></td>
-
-						</tr>
-
-						<tr height="10" />
-
+						<tr height="5" />
+						
+						
 						<%
+						
+				
+						String size2 = 		Integer.toString(marksList.size());
+						session.setAttribute("updateLength", size2);
+						session.setAttribute("actionType", "getStudentProgram");
 									}
 								}
+							else {%> Loading......<%
+								
+								
+							}
 						%>
 
 
 						<tr height="60"></tr>
 					</table>
-					<input type="submit" name="updateBtn" value="Update">
+					<input type="submit" name="updateButton" value="Update">
 				</form>
 				<%-- <%
 					} else {

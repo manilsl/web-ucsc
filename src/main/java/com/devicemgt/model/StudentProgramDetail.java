@@ -3,16 +3,44 @@ package com.devicemgt.model;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
-/**
- * Created by manilsl on 7/10/14.
- */
+
 @XmlRootElement(name="StudentProgram")
-public class StudentProgram {
+public class StudentProgramDetail {
 
     String studentID;
     String programID;
     String subjectID;
-    String finalMark;
+    String studentName;
+    String programName;
+    String subjectName;
+    double finalMark;
+
+    @XmlElement(name="studentName")
+    public String getStudentName() {
+        return studentName;
+    }
+
+    public void setStudentName(String studentName) {
+        this.studentName = studentName;
+    }
+
+    @XmlElement(name="programName")
+    public String getProgramName() {
+        return programName;
+    }
+
+    public void setProgramName(String programName) {
+        this.programName = programName;
+    }
+
+    @XmlElement(name="subjectName")
+    public String getSubjectName() {
+        return subjectName;
+    }
+
+    public void setSubjectName(String subjectName) {
+        this.subjectName = subjectName;
+    }
 
     @XmlElement(name="studentID")
     public String getStudentID() {
@@ -42,11 +70,11 @@ public class StudentProgram {
     }
 
     @XmlElement(name="finalMark")
-    public String getFinalMark() {
+    public double getFinalMark() {
         return finalMark;
     }
 
-    public void setFinalMark(String finalMark) {
+    public void setFinalMark(double finalMark) {
         this.finalMark = finalMark;
     }
 }

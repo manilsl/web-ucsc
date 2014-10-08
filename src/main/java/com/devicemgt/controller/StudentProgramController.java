@@ -16,6 +16,7 @@ import com.devicemgt.dao.StudentProgramDao;
 import com.devicemgt.dao.StudentProgramDaoImpl;
 import com.devicemgt.dao.HttpAPICaller;
 import com.devicemgt.model.StudentProgram;
+import com.devicemgt.model.StudentProgramDetail;
 import com.devicemgt.util.BackendConstants;
 import com.devicemgt.util.FrontConstants;
 
@@ -67,7 +68,7 @@ public class StudentProgramController extends HttpServlet {
 			actionType = "deleteStudentProgram";
 		} else if (request.getParameter("editBtn") != null) {
 			actionType = "editStudentProgram";
-		} else if (request.getParameter("updateBtn") != null) {
+		} else if (request.getParameter("updateButton") != null) {
 			actionType = "updateStudentProgram";
 		}
 
@@ -86,7 +87,7 @@ public class StudentProgramController extends HttpServlet {
 		String strResponse = "";
 		if (isValidated) {
 
-			System.out.println("Action type : " + actionType);
+			System.out.println("Action type1 : " + actionType);
 
 			if (actionType.equals("getStudentProgram")) {
 
@@ -98,8 +99,16 @@ public class StudentProgramController extends HttpServlet {
 				requestDispatcher = request.getRequestDispatcher("getstudentProgram.jsp");
 				requestDispatcher.forward(request, response);
 
-			} else if (actionType.equals("getSearch")) {
+			} else if (actionType.equals("getStudentProgramDetail")) {
 
+				LinkedList<StudentProgramDetail> studentProgramList = getStudentProgramDetail(request,response);
+				HttpSession session = request.getSession();
+
+				session.setAttribute("StudentProgramListDet", studentProgramList);
+				requestDispatcher = request.getRequestDispatcher("getstudentProgram.jsp");
+				requestDispatcher.forward(request, response);
+
+			}else if (actionType.equals("getSearch")) {
 
 				String strSelectName = request.getParameter("dNAME");
 				strSelectName = strSelectName.replace(" ", "%20");
@@ -118,7 +127,7 @@ public class StudentProgramController extends HttpServlet {
 
 				}
 
-				String restURL = BackendConstants.SERVICEURL +"/studentProgram/getstudentProgramsdetail";
+				String restURL = BackendConstants.SERVICEURL +"/studentprogram/getstudentprogramdetail";
 
 				if (firstPara) {
 					restURL = restURL + options;
@@ -150,7 +159,7 @@ public class StudentProgramController extends HttpServlet {
 				studentProgram.setStudentProgramDisplayID(strDisplayID);*/
 
 
-				String restURL = BackendConstants.SERVICEURL +"/studentProgram/addstudentProgram";
+				String restURL = BackendConstants.SERVICEURL +"/studentprogram/addstudentprogram";
 				System.out.println("restURL add " + restURL);
 				studentProgramDao = new StudentProgramDaoImpl();
 				strResponse = studentProgramDao.addStudentProgram(studentProgram, restURL);
@@ -159,7 +168,7 @@ public class StudentProgramController extends HttpServlet {
 				HttpSession session = request.getSession();
 
 				requestDispatcher = request
-						.getRequestDispatcher("add_studentProgram.jsp");
+						.getRequestDispatcher("add_marks_lecturer_enter.jsp");
 				requestDispatcher.forward(request, response);
 
 			} else if (actionType.equals("getStudentProgramOnLoad")) {
@@ -180,7 +189,7 @@ public class StudentProgramController extends HttpServlet {
 				String strDltRadio = request.getParameter("deleteStudentProgram");
 				System.out.println(strDltRadio);
 
-				String restURL = BackendConstants.SERVICEURL +"/studentProgram/deletestudentProgram/"
+				String restURL = BackendConstants.SERVICEURL +"/studentprogram/deletestudentprogram/"
 						+ strDltRadio;
 
 				studentProgramDao = new StudentProgramDaoImpl();
@@ -209,7 +218,7 @@ public class StudentProgramController extends HttpServlet {
 				String strBtnEdit = request.getParameter("editStudentProgram");
 				System.out.println(strBtnEdit);
 
-				String restURL = BackendConstants.SERVICEURL +"/studentProgram/getstudentPrograms?studentProgramId="
+				String restURL = BackendConstants.SERVICEURL +"/studentprogram/getstudentprogram?studentProgramId="
 						+ strBtnEdit;
 				httpAPICaller = new HttpAPICaller();
 				String line = httpAPICaller.getRequest(restURL);
@@ -227,33 +236,51 @@ public class StudentProgramController extends HttpServlet {
 				requestDispatcher.forward(request, response);
 
 			} else if (actionType.equals("updateStudentProgram")) {
-
-				String studentID = request.getParameter("studentID");
-				String lecturerMark = request.getParameter("lecturerMark");
-				System.out.println(lecturerMark);
-
-				studentProgram = new StudentProgram();
-				studentProgram.setStudentID(studentID);
-				studentProgram.setFinalMark(lecturerMark);
-
-
-				String restURL = BackendConstants.SERVICEURL +"/studentprogram/updatestudentProgram/"
-						+ strID;
-
+				
+				String strLength =  (String) request.getSession(false).getAttribute("updateLength");
+				System.out.println("strLength " + strLength);
+				
+				int intLength = Integer.parseInt(strLength);
+				System.out.println("intLength " + intLength);
+				
 				studentProgramDao = new StudentProgramDaoImpl();
-				strResponse = studentProgramDao.updateStudentProgram(studentProgram, restURL);
+				for (int i = 0; i < intLength; i++) {
+					String check = request.getParameter("isEdit"+i);
+					System.out.println(check);
+					if(check.equals("1"))
+					{
+						
+						System.out.println("Begin Update"  + i);
+						String studentID = request.getParameter("studentID"+i);
+						String programID = request.getParameter("programID"+i);
+						String subjectID = request.getParameter("subjectID"+i);
+						String lecturerMark = request.getParameter("lecturerMark"+i);
+						System.out.println(lecturerMark + " is for lecturerMark " + i);
+						StudentProgram studentProgram = new StudentProgram();
+						studentProgram.setStudentID(studentID);
+						studentProgram.setFinalMark(lecturerMark);
+						studentProgram.setProgramID(programID);
+						studentProgram.setSubjectID(subjectID);
+						String restURL = BackendConstants.SERVICEURL +"/studentprogram/updatestudentprogram?studentID="
+								+ studentID + "&programID=" + programID + "&subjectID=" + subjectID;
+						System.out.println("Before Call " + i);
+						strResponse = studentProgramDao.updateStudentProgram(studentProgram, restURL);
+						System.out.println("after Call");
+						
+						
+					}
+					else 
+					{System.out.println("not equal");}
+					
+				}
+				request.setAttribute(BackendConstants.ERROR_MESSAGE,strResponse);
 
-				request.setAttribute(BackendConstants.ERROR_MESSAGE,
-						strResponse);
-
-				LinkedList<StudentProgram> studentProgramList = getStudentProgramFromDB(request,
-						response);
+				LinkedList<StudentProgram> studentProgramList = getStudentProgramFromDB(request,response);
 				HttpSession session = request.getSession();
 
 				session.setAttribute("StudentProgramList", studentProgramList);
 
-				requestDispatcher = request
-						.getRequestDispatcher("updateordelete_studentProgram.jsp");
+				requestDispatcher = request.getRequestDispatcher("updateordelete_studentProgram.jsp");
 				requestDispatcher.forward(request, response);
 
 			} else if (actionType.equals("loadStudentProgram")) {
@@ -296,7 +323,7 @@ public class StudentProgramController extends HttpServlet {
 		LinkedList<StudentProgram> studentProgramList = new LinkedList<StudentProgram>();
 		try {
 
-			String strURL = BackendConstants.SERVICEURL +"/studentProgram/getstudentProgram";
+			String strURL = BackendConstants.SERVICEURL +"/studentprogram/getstudentprogram";
 			httpAPICaller = new HttpAPICaller();
 			
 			//System.out.println(strURL + " strURL");
@@ -308,6 +335,30 @@ public class StudentProgramController extends HttpServlet {
 
 		} catch (Exception e) {
 			System.out.println(e.toString() + " getStudentProgramFromDB");
+		} finally {
+			return studentProgramList;
+		}
+
+	}
+	
+	
+	@SuppressWarnings("finally")
+	public LinkedList<StudentProgramDetail> getStudentProgramDetail(HttpServletRequest request,
+			HttpServletResponse response) {
+
+		LinkedList<StudentProgramDetail> studentProgramList = new LinkedList<StudentProgramDetail>();
+		try {
+
+			String strURL = BackendConstants.SERVICEURL +"/studentprogram/getstudentprogramdetail";
+			httpAPICaller = new HttpAPICaller();
+			
+			String line = httpAPICaller.getRequest(strURL);
+
+			studentProgramDao = new StudentProgramDaoImpl();
+			studentProgramList = studentProgramDao.getStudentProgramDetail(line, "StudentProgram");
+
+		} catch (Exception e) {
+			System.out.println(e.toString() + " getStudentProgramDetail");
 		} finally {
 			return studentProgramList;
 		}
