@@ -10,7 +10,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>WSO2 Device Repository</title>
 <link href="css/style.css" rel="stylesheet" type="text/css" />
-
+<%LinkedList<StudentProgramDetail> marksList =null;%> 
 <script>
 	function loadCourses() {
 		var xmlhttp;
@@ -28,6 +28,28 @@
 		xmlhttp.open("GET", "StudentProgramController", true);
 		xmlhttp.send();
 	}
+	
+	
+	var carsAndModels={};
+	carsAndModels['VO']=['V70','XC60','XC90'];
+	carsAndModels['VW']=['Golf','Polo','Scirocco','Touareg'];
+	carsAndModels['BMW']=['M6','X5','Z3'];
+
+	function ChangeCarList() {
+	    var carList = document.getElementById("car");
+	    var modelList = document.getElementById("carmodel");
+	    var selCar = carList.options[carList.selectedIndex].value;
+	    while (modelList.options.length) {
+	        modelList.remove(0);
+	    }
+	    var cars = carsAndModels[selCar];
+	    if (cars) {
+	        for (var i = 0; i < cars.length; i++) {
+	            var car = new Option(cars[i],i);
+	            modelList.options.add(car);
+	        }
+	    }
+	} 
 </script>
 <script>
 function checkEdited(index) {
@@ -130,7 +152,7 @@ function checkEdited(index) {
 		</center>
 
 		<%
-			LinkedList<StudentProgramDetail> marksList = (LinkedList<StudentProgramDetail>) session.getAttribute("StudentProgramListDet");
+			marksList = (LinkedList<StudentProgramDetail>) session.getAttribute("StudentProgramListDet");
 		
 		
 		
@@ -140,6 +162,16 @@ function checkEdited(index) {
 			<div id="content">
 
 				<form action="StudentProgramController" method="get">
+				
+				<select id="car" onchange="ChangeCarList();"> 
+  <option value="">-- Car --</option> 
+  <option value="VO">Volvo</option> 
+  <option value="VW">Volkswagen</option> 
+  <option value="BMW">BMW</option> 
+</select> 
+
+<select id="carmodel"></select> 
+				
 					<table width="900" height="80" border="1" cellspacing="1">
 						<tr height="60"></tr>
 

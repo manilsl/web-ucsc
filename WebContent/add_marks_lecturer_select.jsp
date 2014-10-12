@@ -10,7 +10,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>WSO2 Device Repository</title>
 <link href="css/style.css" rel="stylesheet" type="text/css" />
-
+<%-- <%LinkedList<StudentProgramDetail> marksList =null;%>  --%>
 <script>
 	function loadCourses() {
 		var xmlhttp;
@@ -28,7 +28,10 @@
 		xmlhttp.open("GET", "StudentProgramController", true);
 		xmlhttp.send();
 	}
-</script>
+	
+	
+	</script>
+	
 <script>
 function checkEdited(index) {
 
@@ -47,26 +50,6 @@ function checkEdited(index) {
 
 <body id="page1"  onload="loadCourses()">
 
-	<%-- <%
-		String username = null;
-		String role = "user";
-
-		Cookie cookie = null;
-		Cookie[] cookies = null;
-		cookies = request.getCookies();
-		if (cookies != null) {
-			for (int i = 0; i < cookies.length; i++) {
-				cookie = cookies[i];
-				if (cookie.getName().equals("user_name")) {
-					username = cookie.getValue();
-				} else if (cookie.getName().equals("user_role")) {
-					role = cookie.getValue();
-				}
-			}
-		}
-
-		if (username != null) {
-	%> --%>
 	<table height="100" width="100%" border="0" cellspacing="1"
 		bgcolor="#474747">
 		<tr>
@@ -130,7 +113,7 @@ function checkEdited(index) {
 		</center>
 
 		<%
-			LinkedList<StudentProgramDetail> marksList = (LinkedList<StudentProgramDetail>) session.getAttribute("StudentProgramListDet");
+		LinkedList<StudentProgramDetail> marksList = (LinkedList<StudentProgramDetail>) session.getAttribute("StudentProgramListDet");
 		
 		
 		
@@ -138,6 +121,15 @@ function checkEdited(index) {
 
 		<div id="frame">
 			<div id="content">
+				<select id="car" onclick="ChangeCarList();"> 
+				  <option value="">-- Car --</option> 
+				  <option value="VO">Volvo</option> 
+				  <option value="VW">Volkswagen</option> 
+				  <option value="BMW">BMW</option> 
+				</select> 
+				
+				<select id="carmodel"></select> 
+
 
 				<form action="StudentProgramController" method="get">
 					<table width="900" height="80" border="1" cellspacing="1">
@@ -222,6 +214,110 @@ function checkEdited(index) {
 						<tr height="60"></tr>
 					</table>
 					<input type="submit" name="updateButton" value="Update">
+					
+					<script>	
+	
+	var carsAndModels={};
+	carsAndModels['VO']=['V70','XC60','XC90'];
+	carsAndModels['VW']=['Golf','Polo','Scirocco','Touareg'];
+	carsAndModels['BMW']=['M6','X5','Z3'];
+
+	function ChangeCarList() {
+	    var carList = document.getElementById("car");
+	    var modelList = document.getElementById("carmodel");
+	    var selCar = carList.options[carList.selectedIndex].value;
+	    while (modelList.options.length) {
+	        modelList.remove(0);
+	    }
+	    var cars = carsAndModels[selCar];
+	    if (cars) {
+	    	
+	    	<%try{
+	    	 int f = 0;
+	    	 String strTemp = null;
+	    	 session.setAttribute("count", 0);
+	    	 session.setAttribute("tempVal", marksList.get(0).getStudentID());
+	    	 
+	    	 %>
+	    	 var s="";
+	    	 var len = "<%=marksList.size()%>";
+	    
+			 for (var i = 0; i < len; i++) {
+					<%
+					
+					f = Integer.parseInt(session.getAttribute("count").toString());
+					
+					System.out.println("********f " + f );%>
+		        
+					<%strTemp = session.getAttribute("tempVal").toString();%>
+		    		s="<%=strTemp%>";
+		  			var car = new Option(s,i);
+			        modelList.options.add(car);
+			        
+					<%
+					
+					session.setAttribute("count", Integer.parseInt(session.getAttribute("count").toString())+1);
+					f = Integer.parseInt(session.getAttribute("count").toString());
+					session.setAttribute("tempVal",marksList.get(f).getStudentID());
+					
+					System.out.println("********f2 " + f );%>
+			        
+			 }
+	        
+	        <%}catch(Exception d){System.out.println(d.toString());}%>
+	    }
+	} 
+</script>
+
+
+
+<script type="text/javascript">
+
+function getXMLObject()  //XML OBJECT
+{
+   var xmlHttp = false;
+   try {
+     xmlHttp = new ActiveXObject("Msxml2.XMLHTTP")  // For Old Microsoft Browsers
+   }
+   catch (e) {
+     try {
+       xmlHttp = new ActiveXObject("Microsoft.XMLHTTP")  // For Microsoft IE 6.0+
+     }
+     catch (e2) {
+       xmlHttp = false   // No Browser accepts the XMLHTTP Object then false
+     
+   }
+   if (!xmlHttp && typeof XMLHttpRequest != 'undefined') {
+     xmlHttp = new XMLHttpRequest();        //For Mozilla, Opera Browsers
+   }
+   return xmlHttp;  // Mandatory Statement returning the ajax object created
+}
+}
+
+var xmlhttp = new getXMLObject();   //xmlhttp holds the ajax object
+
+function ajaxFunction() {
+  var getdate = new Date();  //Used to prevent caching during ajax call
+  if(xmlhttp) {
+
+    xmlhttp.open("GET","ControlServlet?gettime=gettime" ,true);
+    xmlhttp.onreadystatechange  = handleServerResponse;
+    xmlhttp.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+    xmlhttp.send(null);
+  }
+}
+
+function handleServerResponse() {
+   if (xmlhttp.readyState == 4) {
+     if(xmlhttp.status == 200) {
+       document.myForm.time.value=xmlhttp.responseText;  
+     }
+     else {
+        alert("Error during AJAX call. Please try again");
+     }
+   }
+}
+</script>
 				</form>
 				<%-- <%
 					} else {

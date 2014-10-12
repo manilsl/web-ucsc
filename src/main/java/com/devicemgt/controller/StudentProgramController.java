@@ -105,7 +105,7 @@ public class StudentProgramController extends HttpServlet {
 				HttpSession session = request.getSession();
 
 				session.setAttribute("StudentProgramListDet", studentProgramList);
-				requestDispatcher = request.getRequestDispatcher("getstudentProgram.jsp");
+				requestDispatcher = request.getRequestDispatcher("add_marks_lecturer_select.jsp");
 				requestDispatcher.forward(request, response);
 
 			}else if (actionType.equals("getSearch")) {
@@ -355,7 +355,7 @@ public class StudentProgramController extends HttpServlet {
 			String line = httpAPICaller.getRequest(strURL);
 
 			studentProgramDao = new StudentProgramDaoImpl();
-			studentProgramList = studentProgramDao.getStudentProgramDetail(line, "StudentProgram");
+			studentProgramList = studentProgramDao.getStudentProgramDetail(line, "StudentProgramDetail");
 
 		} catch (Exception e) {
 			System.out.println(e.toString() + " getStudentProgramDetail");

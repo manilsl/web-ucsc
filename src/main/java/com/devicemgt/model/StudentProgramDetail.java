@@ -4,7 +4,7 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
 
-@XmlRootElement(name="StudentProgram")
+@XmlRootElement(name="StudentProgramDetail")
 public class StudentProgramDetail {
 
     String studentID;
