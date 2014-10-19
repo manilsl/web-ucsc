@@ -31,25 +31,12 @@ public class ControlServlet extends HttpServlet {
             requestURL.append("?").append(request.getQueryString());
         }
         String completeURL = requestURL.toString();
+
         
-        System.out.println("completeURL " + completeURL);
-        RequestDispatcher requestDispatcher = null;
-        HttpSession session = request.getSession();
-        String[] array = {"a","b"};
-        session.setAttribute("array", array);
-        
-        
-        session.setAttribute("data", "Pissu hadenawa");
-        
-        if(request.getParameter("gettime")!= null && !request.getParameter("gettime").toString().equals("")){ 
-        PrintWriter out = response.getWriter();
-        Date df = new Date();
-        out.println(df.getTime());
-        
-       
-        
-        
-        
+        if(request.getParameter("program")!= null && !request.getParameter("program").toString().equals("")){ 
+        	
+        	//if (request.getParameter("course").toString().equals("1"))
+
         }
        // requestDispatcher = request.getRequestDispatcher("test.jsp");
 	//	requestDispatcher.forward(request, response);

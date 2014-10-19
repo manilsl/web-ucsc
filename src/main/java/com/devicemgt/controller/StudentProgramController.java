@@ -47,6 +47,7 @@ public class StudentProgramController extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse
 	 *      response)
 	 */
+	@SuppressWarnings("null")
 	protected void doGet(HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException {
 
@@ -70,6 +71,8 @@ public class StudentProgramController extends HttpServlet {
 			actionType = "editStudentProgram";
 		} else if (request.getParameter("updateButton") != null) {
 			actionType = "updateStudentProgram";
+		} else if (request.getParameter("getSelectList") != null) {
+			actionType = "getSelectList";
 		}
 
 		if ((request.getParameter("addStudentProgram") != null)
@@ -78,9 +81,6 @@ public class StudentProgramController extends HttpServlet {
 
 			strName = request.getParameter("studentProgramName");
 			strDisplayID = request.getParameter("studentProgramID");
-			//strDescription = request.getParameter("description");
-
-
 
 		}
 
@@ -99,16 +99,47 @@ public class StudentProgramController extends HttpServlet {
 				requestDispatcher = request.getRequestDispatcher("getstudentProgram.jsp");
 				requestDispatcher.forward(request, response);
 
+			} else if (actionType.equals("getSelectList")) {
+
+				String  para = "1";
+				try
+				{
+					response.setContentType("text/html");
+					StringBuffer requestURL = request.getRequestURL();
+			        if (request.getQueryString() != null) {
+			            requestURL.append("?").append(request.getQueryString());
+			        }
+			        String completeURL = requestURL.toString();
+			        System.out.println("PROGRAM2 IS ****** " +  request.getParameter("program").toString());
+		        	para = request.getParameter("program").toString();
+		        	para.replace(" ", "%20");
+				
+				}
+				catch(Exception sel)
+				{System.out.println("sel" + sel.toString());}
+				
+				LinkedList<String> studentProgramList = getSelectList(request,response,para);
+				HttpSession session = request.getSession();
+
+				session.setAttribute("SelectedList", studentProgramList);
+				
+				System.out.println(studentProgramList.get(0).toString());
+				
+				requestDispatcher = request.getRequestDispatcher("addMarkLec_select.jsp");
+				
+		        requestDispatcher.forward(request, response);
+		        
+
 			} else if (actionType.equals("getStudentProgramDetail")) {
 
 				LinkedList<StudentProgramDetail> studentProgramList = getStudentProgramDetail(request,response);
 				HttpSession session = request.getSession();
 
 				session.setAttribute("StudentProgramListDet", studentProgramList);
-				requestDispatcher = request.getRequestDispatcher("add_marks_lecturer_select.jsp");
+				requestDispatcher = request.getRequestDispatcher("addMarkLec_select2.jsp");
 				requestDispatcher.forward(request, response);
 
-			}else if (actionType.equals("getSearch")) {
+			} else if (actionType.equals("getSearch")) {
 
 				String strSelectName = request.getParameter("dNAME");
 				strSelectName = strSelectName.replace(" ", "%20");
@@ -187,7 +218,7 @@ public class StudentProgramController extends HttpServlet {
 			} else if (actionType.equals("deleteStudentProgram")) {
 
 				String strDltRadio = request.getParameter("deleteStudentProgram");
-				System.out.println(strDltRadio);
+				//System.out.println(strDltRadio);
 
 				String restURL = BackendConstants.SERVICEURL +"/studentprogram/deletestudentprogram/"
 						+ strDltRadio;
@@ -216,7 +247,7 @@ public class StudentProgramController extends HttpServlet {
 			} else if (actionType.equals("editStudentProgram")) {
 
 				String strBtnEdit = request.getParameter("editStudentProgram");
-				System.out.println(strBtnEdit);
+			//	System.out.println(strBtnEdit);
 
 				String restURL = BackendConstants.SERVICEURL +"/studentprogram/getstudentprogram?studentProgramId="
 						+ strBtnEdit;
@@ -238,24 +269,24 @@ public class StudentProgramController extends HttpServlet {
 			} else if (actionType.equals("updateStudentProgram")) {
 				
 				String strLength =  (String) request.getSession(false).getAttribute("updateLength");
-				System.out.println("strLength " + strLength);
+				//System.out.println("strLength " + strLength);
 				
 				int intLength = Integer.parseInt(strLength);
-				System.out.println("intLength " + intLength);
+				//System.out.println("intLength " + intLength);
 				
 				studentProgramDao = new StudentProgramDaoImpl();
 				for (int i = 0; i < intLength; i++) {
 					String check = request.getParameter("isEdit"+i);
-					System.out.println(check);
+				//	System.out.println(check);
 					if(check.equals("1"))
 					{
 						
-						System.out.println("Begin Update"  + i);
+					//	System.out.println("Begin Update"  + i);
 						String studentID = request.getParameter("studentID"+i);
 						String programID = request.getParameter("programID"+i);
 						String subjectID = request.getParameter("subjectID"+i);
 						String lecturerMark = request.getParameter("lecturerMark"+i);
-						System.out.println(lecturerMark + " is for lecturerMark " + i);
+					//	System.out.println(lecturerMark + " is for lecturerMark " + i);
 						StudentProgram studentProgram = new StudentProgram();
 						studentProgram.setStudentID(studentID);
 						studentProgram.setFinalMark(lecturerMark);
@@ -263,9 +294,9 @@ public class StudentProgramController extends HttpServlet {
 						studentProgram.setSubjectID(subjectID);
 						String restURL = BackendConstants.SERVICEURL +"/studentprogram/updatestudentprogram?studentID="
 								+ studentID + "&programID=" + programID + "&subjectID=" + subjectID;
-						System.out.println("Before Call " + i);
+						//System.out.println("Before Call " + i);
 						strResponse = studentProgramDao.updateStudentProgram(studentProgram, restURL);
-						System.out.println("after Call");
+						//System.out.println("after Call");
 						
 						
 					}
@@ -343,8 +374,7 @@ public class StudentProgramController extends HttpServlet {
 	
 	
 	@SuppressWarnings("finally")
-	public LinkedList<StudentProgramDetail> getStudentProgramDetail(HttpServletRequest request,
-			HttpServletResponse response) {
+	public LinkedList<StudentProgramDetail> getStudentProgramDetail(HttpServletRequest request, HttpServletResponse response) {
 
 		LinkedList<StudentProgramDetail> studentProgramList = new LinkedList<StudentProgramDetail>();
 		try {
@@ -362,6 +392,37 @@ public class StudentProgramController extends HttpServlet {
 		} finally {
 			return studentProgramList;
 		}
+
+	}
+	
+	
+	public LinkedList<String> getSelectList(HttpServletRequest request, HttpServletResponse response , String program) {
+
+		LinkedList<StudentProgramDetail> studentProgramList = new LinkedList<StudentProgramDetail>();
+		LinkedList<String> selectList = new LinkedList<String>();
+		try {
+			String parameter  = program.replace(" ", "%20");
+			
+			System.out.println("program inside the functions isssssssssss " + parameter);
+			String strURL = BackendConstants.SERVICEURL +"/studentprogram/getstudentprogramdetail?programID="+parameter;
+			httpAPICaller = new HttpAPICaller();
+			
+			
+			System.out.println("strURL before calll is " + strURL);
+			String line = httpAPICaller.getRequest(strURL);
+
+			studentProgramDao = new StudentProgramDaoImpl();
+			studentProgramList = studentProgramDao.getStudentProgramDetail(line, "StudentProgramDetail");
+			
+			for (int i = 0; i < studentProgramList.size(); i++) {
+				selectList.add(studentProgramList.get(i).getSubjectName());
+			}
+			
+			return selectList;
+		} catch (Exception e) {
+			System.out.println(e.toString() + " getSelectList");
+			return selectList;
+		} 
 
 	}
 

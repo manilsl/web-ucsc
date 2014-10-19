@@ -41,12 +41,11 @@ function checkEdited(index) {
 	 
 	}
 </script>
-
+addMarkLec_select2
 </head>
-		<%
-				String actionType = "getStudentProgramDetail";
-					session.setAttribute("actionType", actionType);
-			%>
+		<%	String actionType = "getStudentProgramDetail";
+			session.setAttribute("actionType", actionType);
+		%>
 
 <body id="page1"  onload="loadCourses()">
 
@@ -112,29 +111,18 @@ function checkEdited(index) {
 			</font></b>
 		</center>
 
-		<%
-		LinkedList<StudentProgramDetail> marksList = (LinkedList<StudentProgramDetail>) session.getAttribute("StudentProgramListDet");
-		
-		
-		
-		%>
+		<% LinkedList<StudentProgramDetail> marksList = (LinkedList<StudentProgramDetail>) session.getAttribute("StudentProgramListDet");	%>
 
 		<div id="frame">
 			<div id="content">
-				<select id="car" onclick="ChangeCarList();"> 
-				  <option value="">-- Car --</option> 
-				  <option value="VO">Volvo</option> 
-				  <option value="VW">Volkswagen</option> 
-				  <option value="BMW">BMW</option> 
-				</select> 
 				
-				<select id="carmodel"></select> 
 
-
-				<form action="StudentProgramController" method="get">
+				<form action="StudentProgramController" method="post">
 					<table width="900" height="80" border="1" cellspacing="1">
 						<tr height="60"></tr>
-
+	
+							<td align="center"><input type="text" name="car2" 
+								value="car2" /></td>
 
 						<%
 						
@@ -212,63 +200,25 @@ function checkEdited(index) {
 
 
 						<tr height="60"></tr>
+					
+						
+				
+								
+				<select  id="programSelect"  name="programSelect"  onclick="ChangeCarList();"> 
+				 <!--  <option value="">--Program--</option>  --> 
+				  <option value="1">Masters 2013 Batch 1</option>
+				  <option value="2">Masters 2014 Batch 2</option>
+				  <option value="3">Degree 2013 Batch 1</option> 
+				  <option value="4">Degree 2014 Batch 2</option>
+				  <option value="5">Diploma 2013 Batch 1</option>
+				</select> 
+
+				<select id="carmodel"></select> 
+						
 					</table>
 					<input type="submit" name="updateButton" value="Update">
 					
-					<script>	
-	
-	var carsAndModels={};
-	carsAndModels['VO']=['V70','XC60','XC90'];
-	carsAndModels['VW']=['Golf','Polo','Scirocco','Touareg'];
-	carsAndModels['BMW']=['M6','X5','Z3'];
-
-	function ChangeCarList() {
-	    var carList = document.getElementById("car");
-	    var modelList = document.getElementById("carmodel");
-	    var selCar = carList.options[carList.selectedIndex].value;
-	    while (modelList.options.length) {
-	        modelList.remove(0);
-	    }
-	    var cars = carsAndModels[selCar];
-	    if (cars) {
-	    	
-	    	<%try{
-	    	 int f = 0;
-	    	 String strTemp = null;
-	    	 session.setAttribute("count", 0);
-	    	 session.setAttribute("tempVal", marksList.get(0).getStudentID());
-	    	 
-	    	 %>
-	    	 var s="";
-	    	 var len = "<%=marksList.size()%>";
-	    
-			 for (var i = 0; i < len; i++) {
-					<%
 					
-					f = Integer.parseInt(session.getAttribute("count").toString());
-					
-					System.out.println("********f " + f );%>
-		        
-					<%strTemp = session.getAttribute("tempVal").toString();%>
-		    		s="<%=strTemp%>";
-		  			var car = new Option(s,i);
-			        modelList.options.add(car);
-			        
-					<%
-					
-					session.setAttribute("count", Integer.parseInt(session.getAttribute("count").toString())+1);
-					f = Integer.parseInt(session.getAttribute("count").toString());
-					session.setAttribute("tempVal",marksList.get(f).getStudentID());
-					
-					System.out.println("********f2 " + f );%>
-			        
-			 }
-	        
-	        <%}catch(Exception d){System.out.println(d.toString());}%>
-	    }
-	} 
-</script>
-
 
 
 <script type="text/javascript">
@@ -297,20 +247,24 @@ function getXMLObject()  //XML OBJECT
 var xmlhttp = new getXMLObject();   //xmlhttp holds the ajax object
 
 function ajaxFunction() {
+	//alert("inside ajaxFunc");
+    var carList = document.getElementById("programSelect");
+    var selectedProgram = carList.options[carList.selectedIndex].value;
   var getdate = new Date();  //Used to prevent caching during ajax call
   if(xmlhttp) {
 
-    xmlhttp.open("GET","ControlServlet?gettime=gettime" ,true);
+	//  alert(selectedProgram);
+    xmlhttp.open("GET","StudentProgramController?program="+selectedProgram,true);
     xmlhttp.onreadystatechange  = handleServerResponse;
-    xmlhttp.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-    xmlhttp.send(null);
+    xmlhttp.setRequestHeader('Content-Type', 'application/text');
+    xmlhttp.send("program=program");
   }
 }
 
 function handleServerResponse() {
    if (xmlhttp.readyState == 4) {
      if(xmlhttp.status == 200) {
-       document.myForm.time.value=xmlhttp.responseText;  
+     //  document.myForm.time.value=xmlhttp.responseText;  
      }
      else {
         alert("Error during AJAX call. Please try again");
@@ -318,15 +272,60 @@ function handleServerResponse() {
    }
 }
 </script>
+
+
+<script>	
+	
+	var carsAndModels={};
+	carsAndModels['VO']=['V70','XC60','XC90'];
+	carsAndModels['VW']=['Golf','Polo','Scirocco','Touareg'];
+	carsAndModels['BMW']=['M6','X5','Z3'];
+
+	function ChangeCarList() {
+	
+		<%	session.setAttribute("actionType", "getSelectList"); 	%>
+		
+		ajaxFunction();
+		
+		<% LinkedList<String> selectList = (LinkedList<String>) session.getAttribute("SelectedList");	%>
+	    var carList = document.getElementById("programSelect");
+	    var modelList = document.getElementById("carmodel");
+	    var selCar = carList.options[carList.selectedIndex].value;
+	    
+	    while (modelList.options.length) {
+	        modelList.remove(0);
+	    }
+	    var cars = carsAndModels[selCar];
+	    if (cars) {
+	    	
+	    	<%try{
+	    	 int f = 0;
+
+	    	 
+	    	 %>
+	  
+	    	 var colArray = new Array();
+	    	 var len = "<%=selectList.size()%>";
+	    	 
+	    	 <% for (int g=0; g<selectList.size(); g++) { %>
+	    	 colArray[<%= g %>] = "<%= selectList.get(g).toString() %>"; 
+	    	 <% } %>
+	    	 
+	    
+			 for (var i = 0; i < len; i++) {
+
+		  			var car = new Option(colArray[i],i);
+			        modelList.options.add(car);
+   
+			 }
+	        
+	        <%}catch(Exception d){System.out.println(d.toString());}%>
+	    }
+	} 
+</script>
+
 				</form>
-				<%-- <%
-					} else {
-						String url = "/";
-				%>
-				<jsp:forward page="<%=url%>" />
-				<%
-					}
-				%> --%>
+			
 			</div>
 		</div>
 

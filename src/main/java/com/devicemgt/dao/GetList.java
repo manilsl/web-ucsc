@@ -28,14 +28,14 @@ public class GetList {
 
 			}
 
-			System.out.println(jsonObject.toString());
+		//	System.out.println(jsonObject.toString());
 			for (int x = 0; x < jsonObject.getJSONArray(rootElement).length(); x++) {
 
 				JSONObject jObject = new JSONObject();
 	
 				jObject.put(rootElement, jsonObject.getJSONArray(rootElement).get(x));
 	//			System.out.println("2.3");
-				System.out.println(jObject.toString());
+			//System.out.println(jObject.toString());
 		//		System.out.println("3");
 				 String theType = "com.devicemgt.model." + className;
 		//		 System.out.println("4");
